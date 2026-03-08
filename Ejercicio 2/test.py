@@ -23,16 +23,25 @@
 # config1.set_cpu_threshold(90.0)
 # print("Umbral desde config2:", config2.get_cpu_threshold())}
 
-from models import Alert
-from observer import EmailAlert
+# from models import Alert
+# from observer import EmailAlert
 
 
-alert = Alert(
-    message="La CPU superó el umbral permitido",
-    metric_name="CPU",
-    current_value=85.0,
-    threshold=80.0
-)
+# alert = Alert(
+#     message="La CPU superó el umbral permitido",
+#     metric_name="CPU",
+#     current_value=85.0,
+#     threshold=80.0
+# )
 
-email_observer = EmailAlert()
-email_observer.update(alert)
+# email_observer = EmailAlert()
+# email_observer.update(alert)
+
+from adapter import LegacyAPI, LegacyAdapter
+
+
+legacy_api = LegacyAPI()
+adapter = LegacyAdapter(legacy_api)
+
+metric = adapter.get_metric()
+print(metric)
