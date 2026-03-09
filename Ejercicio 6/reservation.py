@@ -52,6 +52,35 @@ class Reservation:
 
         return self.pricing_strategy.calculate_price(self.base_price)
 
+    def add_observer(self, observer: object) -> None:
+        """
+        Agrega un observador a la reserva.
+
+        Args:
+            observer (object): Observador que recibirá notificaciones.
+        """
+        self.observers.append(observer)
+
+    def remove_observer(self, observer: object) -> None:
+        """
+        Elimina un observador de la reserva.
+
+        Args:
+            observer (object): Observador a eliminar.
+        """
+        if observer in self.observers:
+            self.observers.remove(observer)
+
+    def notify_observers(self, message: str) -> None:
+        """
+        Notifica a todos los observadores registrados.
+
+        Args:
+            message (str): Mensaje que se enviará.
+        """
+        for observer in self.observers:
+            observer.update(message)
+
     def set_state(self, state_name: str) -> None:
         """
         Cambia el estado actual de la reserva según el nombre recibido.
@@ -66,21 +95,39 @@ class Reservation:
 
     def confirm(self) -> None:
         """
-        Delega la confirmación al estado actual.
+        Delega la confirmación al estado actual y notifica el cambio.
         """
+        previous_state = self.state.__class__.__name__
         self.state.confirm(self)
+
+        if previous_state != self.state.__class__.__name__:
+            self.notify_observers(
+                f"La reserva del pasajero {self.passenger_name} ha sido confirmada."
+            )
 
     def cancel(self) -> None:
         """
-        Delega la cancelación al estado actual.
+        Delega la cancelación al estado actual y notifica el cambio.
         """
+        previous_state = self.state.__class__.__name__
         self.state.cancel(self)
+
+        if previous_state != self.state.__class__.__name__:
+            self.notify_observers(
+                f"La reserva del pasajero {self.passenger_name} ha sido cancelada."
+            )
 
     def check_in(self) -> None:
         """
-        Delega el check-in al estado actual.
+        Delega el check-in al estado actual y notifica si aplica.
         """
+        current_state = self.state.__class__.__name__
         self.state.check_in(self)
+
+        if current_state == "ConfirmedState":
+            self.notify_observers(
+                f"El pasajero {self.passenger_name} realizó el check-in."
+            )
 
     def __str__(self) -> str:
         """
