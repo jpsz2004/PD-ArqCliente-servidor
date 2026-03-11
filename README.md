@@ -1,4 +1,4 @@
-# Preguntas de Reflexión
+# EJERCICIO 2
 
 ## ¿Qué problema resuelve Singleton aquí?
 
@@ -116,3 +116,71 @@ facade.check_system()
 Esto reduce la complejidad del código cliente y permite que los detalles internos del sistema cambien sin afectar a quienes lo utilizan.
 
 Además, al centralizar la lógica de coordinación en una sola clase, el sistema se vuelve más fácil de modificar, extender y mantener.
+
+# EJERCICIO 6
+
+## ¿Qué problema resuelve Builder en este sistema?
+
+El patrón **Builder** se utiliza para construir objetos `Reservation` que contienen múltiples atributos, como el nombre del pasajero, número de vuelo, asiento, precio base, extras y preferencias. 
+
+Sin el patrón Builder, la creación de una reserva requeriría un constructor con muchos parámetros, lo que haría el código más difícil de leer, mantener y extender.
+
+Builder permite construir la reserva paso a paso mediante métodos encadenados, lo que mejora la claridad del código y facilita agregar nuevos atributos en el futuro sin modificar el constructor principal de la clase.
+
+---
+
+## ¿Por qué Strategy es adecuado para el cálculo de precios?
+
+El patrón **Strategy** permite encapsular diferentes algoritmos de cálculo de precios en clases independientes.
+
+En el sistema de reservas, el precio final de un vuelo puede variar dependiendo de la clase del servicio, promociones o reglas de negocio. En lugar de incluir múltiples condicionales dentro de la clase `Reservation`, cada forma de calcular el precio se implementa como una estrategia distinta.
+
+Por ejemplo:
+
+- `EconomyPricing`
+- `PremiumPricing`
+
+Esto permite cambiar dinámicamente la forma en que se calcula el precio sin modificar la clase principal de la reserva, mejorando la flexibilidad y mantenibilidad del sistema.
+
+---
+
+## ¿Cómo ayuda State a manejar el ciclo de vida de la reserva?
+
+El patrón **State** permite que el comportamiento de la reserva cambie dependiendo del estado en el que se encuentre.
+
+Una reserva puede pasar por diferentes estados durante su ciclo de vida, como:
+
+- pendiente
+- confirmada
+- cancelada
+
+Cada estado tiene reglas diferentes sobre qué acciones están permitidas. Por ejemplo, una reserva pendiente puede confirmarse o cancelarse, mientras que una reserva cancelada no debería permitir nuevas acciones.
+
+El patrón State encapsula estas reglas dentro de clases de estado específicas, evitando el uso de múltiples estructuras condicionales dentro de la clase principal.
+
+---
+
+## ¿Por qué Observer es útil para las notificaciones?
+
+El patrón **Observer** permite que el sistema notifique automáticamente a distintos componentes cuando ocurre un cambio importante en la reserva.
+
+En este sistema, cuando una reserva cambia de estado (por ejemplo, se confirma o se cancela), los observadores registrados reciben una notificación.
+
+Ejemplos de observadores implementados son:
+
+- `EmailNotifier`
+- `SMSNotifier`
+
+Gracias a este patrón, la clase `Reservation` no necesita conocer los detalles de cómo se envían las notificaciones. Solo informa a sus observadores, y cada uno decide cómo manejar el evento.
+
+Esto reduce el acoplamiento entre el sistema de reservas y los mecanismos de notificación.
+
+---
+
+## ¿Cómo escalar este sistema para manejar muchas reservas?
+
+El sistema puede escalarse fácilmente porque cada patrón aplicado separa responsabilidades específicas.
+
+El patrón Builder facilita la creación de múltiples reservas complejas. Strategy permite agregar nuevas reglas de precios sin modificar la lógica central. State organiza el comportamiento de las reservas según su estado, evitando condicionales complejos. Observer permite añadir nuevos sistemas de notificación sin cambiar la lógica de negocio.
+
+Gracias a esta separación de responsabilidades, el sistema puede ampliarse para manejar un gran número de reservas y nuevas funcionalidades sin afectar las clases existentes.
